@@ -20,6 +20,13 @@ const GameSelection = () => {
       path: '/games/arcade', 
       thumbnail: '/assets/arcade-thumb.jpg',
       description: 'Experience fast-paced action in our retro-inspired arcade game.'
+    },
+    {
+      id: 'speed-typing',
+      name: 'Speed Typing Game',
+      path: '/games/speed-typing',
+      thumbnail: '/assets/speed-typing-thumb.jpg',
+      description: 'Test your typing speed with our fast-paced speed typing game.'
     }
   ];
   
