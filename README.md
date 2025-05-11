@@ -1,70 +1,298 @@
-# Getting Started with Create React App
+# Game Center - Micro Frontend App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modular, independently deployable game center application built with React that can be integrated into your portfolio website using micro frontend architecture.
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+This Game Center is built as a standalone micro frontend that can be:
+- Developed and tested independently
+- Deployed to its own hosting environment
+- Integrated seamlessly into your main portfolio application
+- Extended with new games without modifying the host application
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 🎮 Modular game architecture
+- 🔄 Shared game resources (asset loading, audio, game engine)
+- 🏆 Persistent high scores across games
+- 🚀 Lazy-loaded game components for optimal performance
+- 🔌 Exposes components via Webpack Module Federation
+- 🖥️ Works as both standalone app and integrated component
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Technology Stack
 
-### `npm test`
+- React + Create React App (with CRACO for configuration)
+- Webpack 5 Module Federation
+- React Router for game navigation
+- Canvas-based game rendering
+- Docker + Nginx for deployment
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Project Structure
 
-### `npm run build`
+```
+game-center/
+├── craco.config.js          # CRACO webpack customization
+├── package.json
+├── public/
+│   ├── assets/              # Game assets (sprites, sounds)
+│   └── index.html           
+├── src/
+│   ├── components/
+│   │   └── GameCenter/      # Main Game Center component
+│   │       ├── index.jsx    # Entry point exposed to host apps
+│   │       ├── components/  # Shared UI components
+│   │       │   ├── Loading.jsx
+│   │       │   └── GameSelection.jsx
+│   │       ├── shared/      # Shared resources
+│   │       │   ├── GameContext.jsx  # Context for shared state
+│   │       │   ├── AssetLoader.js   # Asset loading utility
+│   │       │   ├── GameEngine.js    # Shared game engine
+│   │       │   └── AudioManager.js  # Audio management
+│   │       └── games/       # Individual game components
+│   │           ├── PuzzleGame.jsx
+│   │           └── ArcadeGame.jsx
+│   └── index.js             # Main app entry point
+├── Dockerfile               # Production Docker build
+└── nginx.conf               # Nginx configuration for production
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Setup Instructions
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Node.js 16+ and npm
+- Basic knowledge of React and JavaScript
 
-### `npm run eject`
+### Installation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/yourusername/game-center.git
+   cd game-center
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. Start the development server:
+   ```bash
+   npm start
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. Visit http://localhost:3001 to view the Game Center in standalone mode.
 
-## Learn More
+## Creating New Games
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To add a new game to the Game Center:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Create a new game component in the `src/components/GameCenter/games/` directory
+2. Utilize the shared context via `useGameResources()` hook for assets, audio, and game engine
+3. Register the game in the main GameCenter component by adding it to the lazy-loaded imports and routes
+4. Add the game to the selection screen in `GameSelection.jsx`
 
-### Code Splitting
+Example new game:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```jsx
+// src/components/GameCenter/games/SpaceGame.jsx
+import React, { useEffect, useRef } from 'react';
+import { useGameResources } from '../shared/GameContext';
 
-### Analyzing the Bundle Size
+export default function SpaceGame() {
+  const canvasRef = useRef(null);
+  const { assetLoader, gameEngine, audioManager, setScores } = useGameResources();
+  
+  useEffect(() => {
+    // Load game-specific assets
+    const loadAssets = async () => {
+      await assetLoader.loadImage('space-bg', '/assets/space-bg.png');
+      await audioManager.loadSound('laser', '/assets/laser.mp3');
+    };
+    
+    loadAssets();
+    
+    // Initialize game with shared engine
+    const canvas = canvasRef.current;
+    const game = gameEngine.createGame(canvas, {
+      type: 'space',
+      onScore: (score) => {
+        setScores(prev => ({...prev, space: Math.max(prev.space || 0, score)}));
+      }
+    });
+    
+    // Start game loop
+    game.start();
+    
+    return () => game.destroy();
+  }, [assetLoader, gameEngine, audioManager, setScores]);
+  
+  return (
+    <div className="space-game">
+      <h2>Space Adventure</h2>
+      <canvas ref={canvasRef} width={800} height={600} />
+    </div>
+  );
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Integration with Portfolio
 
-### Making a Progressive Web App
+To integrate the Game Center into your portfolio:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. Install required dependencies in your portfolio project:
+   ```bash
+   npm install @craco/craco @module-federation/nextjs-mf
+   ```
 
-### Advanced Configuration
+2. Create a CRACO configuration file (`craco.config.js`) in your portfolio project:
+   ```javascript
+   const { ModuleFederationPlugin } = require('webpack').container;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+   module.exports = {
+     webpack: {
+       configure: (webpackConfig) => {
+         webpackConfig.output.publicPath = 'auto';
+         
+         webpackConfig.plugins.push(
+           new ModuleFederationPlugin({
+             name: 'portfolio',
+             remotes: {
+               gameCenter: process.env.NODE_ENV === 'production'
+                 ? 'gameCenter@https://your-game-center-url.com/remoteEntry.js'
+                 : 'gameCenter@http://localhost:3001/remoteEntry.js',
+             },
+             shared: {
+               react: { 
+                 singleton: true, 
+                 requiredVersion: require('./package.json').dependencies.react 
+               },
+               'react-dom': { 
+                 singleton: true, 
+                 requiredVersion: require('./package.json').dependencies['react-dom'] 
+               },
+             },
+           })
+         );
+         
+         return webpackConfig;
+       },
+     },
+   };
+   ```
 
-### Deployment
+3. Update your portfolio's `package.json` scripts to use CRACO:
+   ```json
+   "scripts": {
+     "start": "craco start",
+     "build": "craco build",
+     "test": "craco test"
+   }
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+4. Create a wrapper component in your portfolio:
+   ```jsx
+   // src/components/GameCenterWrapper.jsx
+   import React, { Suspense, useState, useEffect } from 'react';
 
-### `npm run build` fails to minify
+   const GameCenterWrapper = () => {
+     const [GameCenter, setGameCenter] = useState(null);
+     const [error, setError] = useState(null);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+     useEffect(() => {
+       import('gameCenter/GameCenter')
+         .then((module) => {
+           setGameCenter(() => module.default);
+         })
+         .catch((err) => {
+           console.error('Failed to load Game Center:', err);
+           setError('Failed to load Game Center. Please try again later.');
+         });
+     }, []);
+
+     if (error) {
+       return <div className="error-message">{error}</div>;
+     }
+
+     return (
+       <div className="game-center-wrapper">
+         <Suspense fallback={<div>Loading Game Center...</div>}>
+           {GameCenter ? <GameCenter /> : <div>Initializing...</div>}
+         </Suspense>
+       </div>
+     );
+   };
+
+   export default GameCenterWrapper;
+   ```
+
+5. Add the Game Center to your portfolio routes:
+   ```jsx
+   <Route path="/games/*" element={<GameCenterWrapper />} />
+   ```
+
+## Deployment
+
+### Docker Deployment
+
+Build and deploy the Game Center using Docker:
+
+```bash
+# Build the Docker image
+docker build -t your-name-game-center .
+
+# Run the container
+docker run --name your-game-center-c -p 3002:3002 -d your-name-game-center
+```
+
+### Manual Deployment
+
+For manual deployment:
+
+1. Build the production bundle:
+   ```bash
+   npm run build
+   ```
+
+2. Deploy the contents of the `build` directory to your hosting provider.
+
+3. Ensure your web server is configured to handle client-side routing (similar to the provided `nginx.conf`).
+
+## Configuration Options
+
+The Game Center can be configured through environment variables:
+
+```
+# .env file
+REACT_APP_PUBLIC_PATH=https://your-game-center-url.com/
+REACT_APP_PORT=3001
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Module Federation connection error**:
+   - Check that both applications are running
+   - Verify URLs in the CRACO configuration
+   - Ensure version compatibility between shared dependencies
+
+2. **Game resources not loading**:
+   - Check that assets are in the correct location
+   - Verify paths in the asset loader
+
+3. **Route not found in production**:
+   - Ensure your web server is configured for client-side routing (see nginx.conf)
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Inspired by Dominique Hosea's article on micro frontend architecture
+- Built with React and WebPack Module Federation
