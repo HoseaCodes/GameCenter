@@ -67,7 +67,7 @@ game-center/
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/game-center.git
+   git clone https://github.com/HoseaCodes/GameCenter.git
    cd game-center
    ```
 
