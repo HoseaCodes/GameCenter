@@ -17,6 +17,7 @@ import { BsInfoCircle } from 'react-icons/bs';
 // Lazy load game components for code splitting
 const PuzzleGame = lazy(() => import('./games/PuzzleGame'));
 const ArcadeGame = lazy(() => import('./games/ArcadeGame'));
+const SpeedTypingGame = lazy(() => import('./games/SpeedTypingGame/SpeedTypingGame'));
 
 const GameCenter = () => {
   const [overlap, setOverlap] = useState(false);
@@ -117,6 +118,10 @@ const GameCenter = () => {
               <div className={styles.right}>
                 <div className={styles.buttonsRight}>
                   <h2>Quick Navigation</h2>
+                  <Link to="/games/speed-typing" className={`${styles.cta} ${styles.browseBtn}`}>
+                    <FaGamepad className={styles.ctaSVG} />
+                    Speed Typing Game
+                  </Link>
                   <Link to="/games/puzzle" className={`${styles.cta} ${styles.browseBtn}`}>
                     <FaGamepad className={styles.ctaSVG} />
                     Puzzle Game
@@ -159,6 +164,7 @@ const GameCenter = () => {
             {/* Key change: Replace Routes with Switch for React Router v5 */}
             <Switch>
               <Route exact path="/" component={GameSelection} />
+              <Route path="/games/speed-typing" component={SpeedTypingGame} />
               <Route path="/games/puzzle" component={PuzzleGame} />
               <Route path="/games/arcade" component={ArcadeGame} />
               <Route path="/games" component={GameSelection} />
