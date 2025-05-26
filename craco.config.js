@@ -6,7 +6,7 @@ module.exports = {
     configure: (webpackConfig) => {
       // Set the public path to an absolute URL in production or relative in development
       const isProduction = process.env.NODE_ENV === 'production';
-      const publicPath = isProduction ? 'https://your-game-center-url.com/' : 'http://localhost:3001/';
+      const publicPath = isProduction ? 'https://game-center-rosy.vercel.app/' : 'http://localhost:3001/';
       
       webpackConfig.output.publicPath = publicPath;
       
