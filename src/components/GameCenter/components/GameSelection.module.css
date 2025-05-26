@@ -1,0 +1,126 @@
+.gameSelection {
+  padding: 30px 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #004d4d 0%, #001a1a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.gameSelection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('https://ics.uci.edu/~eppstein/junkyard/associahedron.png') repeat;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.gameSelection h2 {
+  color: #FFFFFF;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 2;
+}
+
+.gameGrid {
+  display: grid;
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+  padding: 0 15px;
+}
+
+@media (min-width: 768px) {
+  .gameGrid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+.gameCard {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 25px;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+}
+
+.gameCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.gameThumbnail {
+  width: 100%;
+  height: 200px;
+  border-radius: 15px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.gameThumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+.gameCard:hover .gameThumbnail img {
+  transform: scale(1.05);
+}
+
+.gameCard h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 24px;
+  color: #000000;
+  margin-bottom: 10px;
+}
+
+.gameDescription {
+  font-size: 16px;
+  color: #333333;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  flex-grow: 1;
+}
+
+.gameScore {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 18px;
+  color: #00CED1;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Touch-friendly adjustments */
+@media (max-width: 767px) {
+  .gameCard {
+    min-height: 44px;
+    padding: 20px;
+  }
+  
+  .gameSelection h2 {
+    font-size: 28px;
+  }
+  
+  .gameCard h3 {
+    font-size: 20px;
+  }
+}
