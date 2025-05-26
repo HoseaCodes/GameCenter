@@ -6,7 +6,7 @@ module.exports = {
     configure: (webpackConfig) => {
       // Set the public path to an absolute URL in production or relative in development
       const isProduction = process.env.NODE_ENV === 'production';
-      const publicPath = isProduction ? 'https://your-game-center-url.com/' : 'http://localhost:3001/';
+      const publicPath = isProduction ? 'https://your-game-center-url.com/' : 'auto';
       
       webpackConfig.output.publicPath = publicPath;
       
@@ -14,30 +14,36 @@ module.exports = {
       webpackConfig.plugins.push(
         new ModuleFederationPlugin({
           // Name of this remote module
-          name: 'gameCenter',
+          name: 'game',
           
           // Filename that will contain the remote entry
           filename: 'remoteEntry.js',
           
           // Components/modules to expose to the host application
           exposes: {
-            './GameCenter': './src/components/GameCenter/index.jsx',
+            './GameCenter': './src/components/GameCenter/GameCenter.jsx',
           },
           
           // Libraries that should be shared between host and remote
-          // Using React 17 versions to match the portfolio
           shared: {
             react: { 
               singleton: true, 
-              requiredVersion: "^17.0.2" 
+              requiredVersion: "^17.0.2",
+              eager: true
             },
             'react-dom': { 
               singleton: true, 
-              requiredVersion: "^17.0.2" 
+              requiredVersion: "^17.0.2",
+              eager: true
             },
             'react-router-dom': { 
               singleton: true, 
-              requiredVersion: "^5.3.4" 
+              requiredVersion: "^6.0.0",
+              eager: true
+            },
+            '@module-federation/nextjs-mf': {
+              singleton: true,
+              eager: true
             }
           },
         })
@@ -49,5 +55,8 @@ module.exports = {
   // Set the development server port to avoid conflicts with your main portfolio
   devServer: {
     port: 3001,
-  }
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+  },
 };

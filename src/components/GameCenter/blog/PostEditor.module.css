@@ -1,0 +1,272 @@
+.editor {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.toolbar h1 {
+  font-size: 2rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4a90e2 0%, #7e57c2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button:hover {
+  background: rgba(74, 144, 226, 0.1);
+  color: #4a90e2;
+}
+
+.button.active {
+  background: rgba(74, 144, 226, 0.2);
+  color: #4a90e2;
+  border-color: #4a90e2;
+}
+
+.button.primary {
+  background: linear-gradient(135deg, #4a90e2 0%, #7e57c2 100%);
+  color: white;
+  border: none;
+}
+
+.button.primary:hover {
+  opacity: 0.9;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  min-height: calc(100vh - 200px);
+}
+
+.editPanel,
+.previewPanel {
+  background: rgba(25, 25, 25, 0.95);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.hidden {
+  display: none;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.field input[type="text"],
+.field input[type="url"],
+.field textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: monospace;
+}
+
+.imageInput,
+.categoryInput {
+  position: relative;
+}
+
+.imageIcon,
+.tagIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.imageInput input {
+  padding-left: 2.5rem;
+}
+
+.categoryForm {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.categoryForm input {
+  flex: 1;
+  padding-left: 2.5rem;
+}
+
+.addButton {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #4a90e2 0%, #7e57c2 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.addButton:hover {
+  opacity: 0.9;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.category {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #4a90e2 0%, #7e57c2 100%);
+  color: white;
+  font-size: 0.875rem;
+}
+
+.removeCategory {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.removeCategory:hover {
+  opacity: 1;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.checkbox input {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.articlePreview {
+  color: #e0e0e0;
+  line-height: 1.8;
+}
+
+.articlePreview h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.articlePreview h2 {
+  font-size: 1.5rem;
+  color: #a0a0a0;
+  margin-bottom: 2rem;
+}
+
+.previewImage {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #888;
+}
+
+.error {
+  color: #e74c3c;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .previewPanel {
+    display: none;
+  }
+
+  .previewPanel.visible {
+    display: block;
+  }
+
+  .editPanel.hidden {
+    display: none;
+  }
+
+  .editPanel {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .editor {
+    padding: 1rem;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .actions {
+    justify-content: center;
+  }
+}
